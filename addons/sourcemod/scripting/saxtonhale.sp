@@ -906,9 +906,11 @@ public void OnMapStart()
 		g_bEnabled = false;
 	}
 	else if ((iForceLoad == 1)
+		StrContains(sMapName, "vsh_", false) != -1
+		/*
 		|| (StrContains(sMapName, "vsh_", false) != -1 && StrContains(sMapName, "vsh_dr_", false) == -1) 
 		|| (StrContains(sMapName, "ff2_", false) != -1)
-		|| (StrContains(sMapName, "arena_", false) != -1))
+		|| (StrContains(sMapName, "arena_", false) != -1)*/)
 	{
 		if (FindEntityByClassname(-1, "tf_logic_arena") == -1)
 		{
