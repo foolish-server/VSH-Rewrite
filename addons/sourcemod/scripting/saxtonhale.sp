@@ -756,6 +756,8 @@ public void OnPluginStart()
 
 public void OnLibraryAdded(const char[] sName)
 {
+	if (!g_bEnabled) return;
+
 	if (StrEqual(sName, "TF2Items"))
 	{
 		g_bTF2Items = true;
@@ -768,6 +770,8 @@ public void OnLibraryAdded(const char[] sName)
 
 public void OnLibraryRemoved(const char[] sName)
 {
+	if (!g_bEnabled) return;
+
 	if (StrEqual(sName, "TF2Items"))
 	{
 		g_bTF2Items = false;
@@ -1057,6 +1061,8 @@ public void OnEntityDestroyed(int iEntity)
 
 void Frame_InitVshPreRoundTimer(int iTime)
 {
+	if (!g_bEnabled) return;
+
 	//Kill the timer created by the game
 	int iGameTimer = -1;
 	while ((iGameTimer = FindEntityByClassname(iGameTimer, "team_round_timer")) > MaxClients)
@@ -1088,6 +1094,8 @@ void Frame_InitVshPreRoundTimer(int iTime)
 
 void Frame_VerifyTeam(int userid)
 {
+	if (!g_bEnabled) return;
+
 	int iClient = GetClientOfUserId(userid);
 	if (iClient <= 0 || !IsClientInGame(iClient)) return;
 
@@ -1114,6 +1122,8 @@ void Frame_VerifyTeam(int userid)
 
 void Frame_RespawnPlayer(int userid)
 {
+	if (!g_bEnabled) return;
+
 	int iClient = GetClientOfUserId(userid);
 	if (iClient <= 0 || !IsClientInGame(iClient) || GetClientTeam(iClient) <= 1) return;
 	
@@ -1122,6 +1132,8 @@ void Frame_RespawnPlayer(int userid)
 
 public void Frame_CallJarate(DataPack data)
 {
+	if (!g_bEnabled) return;
+
 	data.Reset();
 	int iClient = GetClientOfUserId(data.ReadCell());
 	TagsParams tParams = data.ReadCell();
@@ -1153,6 +1165,8 @@ public void TF2_OnConditionAdded(int iClient, TFCond nCond)
 
 public Action Timer_RoundStartSound(Handle hTimer, int iClient)
 {
+	if (!g_bEnabled) return;
+
 	SaxtonHaleBase boss = SaxtonHaleBase(iClient);
 	if (0 < iClient <= MaxClients && IsClientInGame(iClient) && boss.bValid)
 	{
@@ -1166,6 +1180,8 @@ public Action Timer_RoundStartSound(Handle hTimer, int iClient)
 
 public Action Timer_Music(Handle hTimer, SaxtonHaleBase boss)
 {
+	if (!g_bEnabled) return Plugin_Stop;
+
 	if (g_hTimerBossMusic != hTimer)
 		return Plugin_Stop;
 	
@@ -1204,6 +1220,8 @@ public Action Timer_WelcomeMessage(Handle hTimer)
 
 public Action Timer_EntityCleanup(Handle hTimer, int iRef)
 {
+	if (!g_bEnabled) return Plugin_Stop;
+
 	int iEntity = EntRefToEntIndex(iRef);
 	if(iEntity > MaxClients)
 		AcceptEntityInput(iEntity, "Kill");
@@ -1212,6 +1230,8 @@ public Action Timer_EntityCleanup(Handle hTimer, int iRef)
 
 public void OnClientConnected(int iClient)
 {
+	if (!g_bEnabled) return;
+
 	Network_ResetClient(iClient);
 
 	g_iPlayerDamage[iClient] = 0;
@@ -1230,6 +1250,8 @@ public void OnClientConnected(int iClient)
 
 public void OnClientPutInServer(int iClient)
 {
+	if (!g_bEnabled) return;
+
 	SDK_HookGetMaxHealth(iClient);
 	SDK_HookGiveNamedItem(iClient);
 	SDKHook(iClient, SDKHook_PreThink, Client_OnThink);
@@ -1241,6 +1263,8 @@ public void OnClientPutInServer(int iClient)
 
 public void OnClientPostAdminCheck(int iClient)
 {
+	if (!g_bEnabled) return;
+
 	AdminId iAdmin = GetUserAdmin(iClient);
 	if (iAdmin.HasFlag(Admin_RCON) || iAdmin.HasFlag(Admin_Root))
 		Client_AddFlag(iClient, ClientFlags_Admin);
@@ -1248,6 +1272,8 @@ public void OnClientPostAdminCheck(int iClient)
 
 public void OnClientDisconnect(int iClient)
 {
+	if (!g_bEnabled) return;
+
 	SaxtonHaleBase boss = SaxtonHaleBase(iClient);
 	
 	if (boss.bValid && !boss.bMinion && Rank_IsEnabled())
@@ -1599,6 +1625,8 @@ public Action TF2_CalcIsAttackCritical(int iClient, int iWeapon, char[] sWepClas
 
 public Action NormalSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
+	if (!g_bEnabled) return Plugin_Continue;
+
 	if (0 < entity <= MaxClients && IsClientInGame(entity))
 	{
 		SaxtonHaleBase boss = SaxtonHaleBase(entity);
@@ -1615,6 +1643,8 @@ public Action TF2Items_OnGiveNamedItem(int client, char[] classname, int itemDef
 
 Action GiveNamedItem(int iClient, const char[] sClassname, int iIndex)
 {
+	if (!g_bEnabled) return Plugin_Continue;
+
 	SaxtonHaleBase boss = SaxtonHaleBase(iClient);
 	if (boss.bValid)
 		return boss.CallFunction("OnGiveNamedItem", sClassname, iIndex);
@@ -1626,6 +1656,8 @@ Action GiveNamedItem(int iClient, const char[] sClassname, int iIndex)
 
 public Action Timer_DestroyLight(Handle hTimer, int iRef)
 {
+	if (!g_bEnabled) return;
+
 	int iLight = EntRefToEntIndex(iRef);
 	if (iLight > MaxClients)
 	{
