@@ -467,6 +467,9 @@ public void Dome_Frame_Shrink()
 
 public Action Dome_TimerBleed(Handle hTimer)
 {
+	if(!g_bEnabled)
+		return Plugin_Stop;
+
 	if (g_hDomeTimerBleed != hTimer)
 		return Plugin_Stop;
 
